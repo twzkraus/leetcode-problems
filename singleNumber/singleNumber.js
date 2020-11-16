@@ -24,30 +24,33 @@ Follow up: Could you implement a solution with a linear runtime complexity and w
     if number is not in counts, add it to counts
     if it is in counts, set count to 2
   return the one number that's in counts with just one count
+
+  ~~Optimized solution without using extra memory~~
+  * one option: sort the array in place (O(n) operation), then iterate over it again to find duplicates
+    - sort array
+    - iterate over array
+      if next element is the same as current, skip ahead 2 elements
+      otherwise, return the current element
+      -> this ensures that pairs are skipped, while solo elements are isolated
 */
 
-var addACount = (counts, element) => {
-  if (!counts[element]) {
-    counts[element] = 1;
-  } else {
-    counts[element]++;
-  }
-}
-
+// [1, 2, 2]
+// [1, 1, 2, 2, 4]
+// [1]
 var singleNumber = function(nums) {
-  let counts = {};
-  nums.forEach(num => {
-    addACount(counts, num);
-  })
-  for (let num in counts) {
-    if (counts[num] === 1) {
-      return num;
+  nums.sort((a, b) => a - b);
+  let i = 0;
+  while (i < nums.length) {
+    if (nums[i] === nums[i + 1]) {
+      i += 2;
+    } else {
+      return nums[i];
     }
   }
   return null;
 };
 
 /* Test Cases */
-console.log(singleNumber([2, 2, 1])); // => output is 1
-console.log(singleNumber([4, 1, 2, 1, 2])); // => output is 4
-console.log(singleNumber([1])); // => output is 1
+// console.log(singleNumber([2, 2, 1])); // => output is 1
+// console.log(singleNumber([4, 1, 2, 1, 2])); // => output is 4
+// console.log(singleNumber([1])); // => output is 1
