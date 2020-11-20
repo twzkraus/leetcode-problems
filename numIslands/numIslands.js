@@ -34,58 +34,57 @@ An island is surrounded by water and is formed by connecting adjacent lands hori
   if island queue is empty, add 1 to counts
 */
 
-var getValidNeighbors = (grid, i, j) => {
-  let validNeighbors = [];
-  let neighborRows = [i, i, i - 1, i + 1];
-  let neighborCols = [j - 1, j + 1, j, j];
-  for (let k = 0; k < neighborRows.length; k++) {
-    let thisRow = neighborRows[k];
-    let thisCol = neighborCols[k];
-    if ((thisRow >= 0 && thisRow < grid.length) && (thisCol >= 0 && thisCol < grid[0].length) && (grid[thisRow][thisCol] === '1')) {
-      validNeighbors.push([thisRow, thisCol]);
-    }
-  }
-  return validNeighbors;
-};
-
-var sink = (grid, i, j) => {
-  grid[i][j] = "0";
-}
-
 var numIslands = function(grid) {
-  let queue = [];
   let islandCount = 0;
+
+  var sink = (i, j) => {
+    grid[i][j] = "0";
+    if (j > 0) {
+      if (grid[i][j - 1] === '1') {
+        sink(i, j - 1);
+      }
+    }
+    if (j < grid[i].length - 1) {
+      if (grid[i][j + 1] === '1') {
+        sink(i, j + 1);
+      }
+    }
+    if (i > 0) {
+      if (grid[i - 1][j] === '1') {
+        sink(i - 1, j);
+      }
+    }
+    if (i < grid.length - 1) {
+      if (grid[i + 1][j] === '1') {
+        sink(i + 1, j);
+      }
+    }
+  };
+
+  let queue = [];
   for (let i = 0; i < grid.length; i++) {
     for (let j = 0; j < grid[i].length; j++) {
       if (grid[i][j] === '1') {
-        queue = queue.concat(getValidNeighbors(grid, i, j));
-        sink(grid, i, j);
-        while (queue.length) {
-          queue.forEach(land => {
-            queue = queue.concat(getValidNeighbors(grid, land[0], land[1]));
-            queue.shift();
-            sink(grid, land[0], land[1]);
-          });
-        }
         islandCount++;
+        sink(i, j);
       }
     }
   }
   return islandCount;
 };
 
-let grid1 = [
-  ["1","1","1","1","0"],
-  ["1","1","0","1","0"],
-  ["1","1","0","0","0"],
-  ["0","0","0","0","0"]
-];
-console.log(numIslands(grid1), 'should be 1');
+// let grid1 = [
+//   ["1","1","1","1","0"],
+//   ["1","1","0","1","0"],
+//   ["1","1","0","0","0"],
+//   ["0","0","0","0","0"]
+// ];
+// console.log(numIslands(grid1), 'should be 1');
 
-let grid2 = [
-  ["1","1","0","0","0"],
-  ["1","1","0","0","0"],
-  ["0","0","1","0","0"],
-  ["0","0","0","1","1"]
-];
-console.log(numIslands(grid2), 'should be 3');
+// let grid2 = [
+//   ["1","1","0","0","0"],
+//   ["1","1","0","0","0"],
+//   ["0","0","1","0","0"],
+//   ["0","0","0","1","1"]
+// ];
+// console.log(numIslands(grid2), 'should be 3');
