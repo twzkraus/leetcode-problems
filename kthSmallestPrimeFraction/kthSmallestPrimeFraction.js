@@ -28,23 +28,49 @@ K will be between 1 and A.length * (A.length - 1) / 2.
   hl: produce sorted list of fractions (in tuple form), return tuple of kth smallest one
 */
 
-const getAllFractions = (A) => {
-  let fracs = [];
+var ListNode = function(val, next) {
+  this.val = val || 0;
+  this.next = next || null;
+};
+
+var getFractionValue = function(node) {
+  return node.val[0] / node.val[1];
+};
+
+var getAllFractions = function(A) {
+  let head;
   for (let i = 0; i < A.length - 1; i++) {
     for (let j = i + 1; j < A.length; j++) {
-      fracs.push([A[i], A[j]]);
+      let newNode = new ListNode([A[i], A[j]]);
+      if (i === 0 && j === 1) {
+        head = newNode;
+      } else {
+        if (getFractionValue(head) > getFractionValue(newNode)) {
+          newNode.next = head;
+          head = newNode;
+        } else {
+          let node = head;
+          while (node.next && getFractionValue(node.next) < getFractionValue(newNode)) {
+            node = node.next;
+          }
+          let temp = node.next;
+          node.next = newNode;
+          newNode.next = temp;
+        }
+      }
     }
   }
-  fracs.sort((a, b) => a[0] / a[1] - b[0] / b[1]);
-  return fracs;
+  return head;
 }
 
 var kthSmallestPrimeFraction = function(A, K) {
-  if (K === 453785) {
-      return [ 3221, 17041 ];
+  let fracNode = getAllFractions(A);
+  let n = 1;
+  while (n < K) {
+    fracNode = fracNode.next;
+    n++;
   }
-  let allFracs = getAllFractions(A);
-  return allFracs[K - 1];
+  return fracNode.val;
 };
 
 
