@@ -68,50 +68,47 @@ Output: -1
     iterate through string for 5 chars
     if, before you get to 5th count of this placeholder, you hit another placeholder, that means there is overlap--save the type of overlap (e.g. 2 in a group of 1's)
 
+    ~~ character counting option ~~
+    count chars, make sure each has the same count
 */
 
-var countOverlap = function(string, placeholder) {
-  let overlaps = {};
-  let countI = 0;
-  let totalI = 5;
-  for (let i = 0; i < string.length; i++) {
-    if (string[i] === placeholder) {
-      countI++;
-    }
-    if (countI < totalI && string[i] !== placeholder) {
-      overlaps[placeholder] = true;
-    }
-  }
-  return Object.keys(overlaps).length;
-}
-
 var minNumberOfFrogs = function(croakOfFrogs) {
-  let countOfFrogs = 0;
 
-  let strCopy = croakOfFrogs.slice();
-  let placeholder = 1;
-  let croak = 'croak';
-  let valid = true;
-  while (strCopy.indexOf('k') >= 0 && valid) {
-    croak.split('').forEach(char => {
-      let i = strCopy.indexOf(char);
-      if (i >= 0) {
-        strCopy[i] = placeholder;
-        console.log(strCopy);
-      } else {
-        valid = false;
-      }
-    });
-  }
-  if (!valid) {
-    return -1;
-  }
+  let numCroaks = 0;
+  let max = 0;
+  let charCounts = {};
 
-  for (let i = 1; i <= placeholder; i++) {
-    countOfFrogs += countOverlap(strCopy, i);
+  for (let i = 0; i < croakOfFrogs.length; i++) {
+    let char = croakOfFrogs[i];
+
+    if (!charCounts[char]) {
+      charCounts[char] = 0;
+    }
+    charCounts[char]++;
+
+    if (char === 'c') {
+      numCroaks++;
+      max = Math.max(max, numCroaks);
+    }
+    if (char === 'k') {
+      numCroaks--;
+    }
   }
 
-  return countOfFrogs;
+  let counts = Object.values(charCounts);
+  let valid = counts.filter(a => a === counts[0]).length === 'croak'.length;
+
+
+  if (numCroaks === 0 && valid) {
+    return max;
+  }
+  return -1;
+
 };
+
+console.log(minNumberOfFrogs('croakcroak'));
+console.log(minNumberOfFrogs('croakcrook'));
+console.log(minNumberOfFrogs('ccroakroak'));
+console.log(minNumberOfFrogs('cccrrroooaaakkk'));
 
 
