@@ -96,18 +96,21 @@ var displayTable = function(orders) {
       tables[tableNum][item]++;
       items[item] = true;
   });
+  const alphaItems = Object.keys(items).sort();
   // convert to arrays
   const tableArray = [];
   for (let tableNum in tables) {
       let thisTable = [];
       thisTable.push(tableNum);
-      for (let item in items) {
-          thisTable.push(tables[tableNum][item] || 0);
+      for (let i = 0; i < alphaItems.length; i++) {
+          let item = alphaItems[i];
+          let val = tables[tableNum][item] || 0;
+          thisTable.push(val + '');
       }
       tableArray.push(thisTable);
   }
   tableArray.sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
-  const headers = ['Table'].concat(Object.keys(items));
+  const headers = ['Table'].concat(alphaItems);
   tableArray.unshift(headers);
   return tableArray;
 
