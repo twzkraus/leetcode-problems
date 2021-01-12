@@ -82,12 +82,33 @@ CONSTRAINTS
 */
 var displayTable = function(orders) {
   const tables = {};
+  const items = {};
 
   orders.forEach(order => {
       let tableNum = order[1];
       let item = order[2];
-
-  })
-
+      if (!tables[tableNum]) {
+          tables[tableNum] = {};
+      }
+      if (!tables[tableNum][item]) {
+          tables[tableNum][item] = 0;
+      }
+      tables[tableNum][item]++;
+      items[item] = true;
+  });
+  // convert to arrays
+  const tableArray = [];
+  for (let tableNum in tables) {
+      let thisTable = [];
+      thisTable.push(tableNum);
+      for (let item in items) {
+          thisTable.push(tables[tableNum][item] || 0);
+      }
+      tableArray.push(thisTable);
+  }
+  tableArray.sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+  const headers = ['Table'].concat(Object.keys(items));
+  tableArray.unshift(headers);
+  return tableArray;
 
 };
