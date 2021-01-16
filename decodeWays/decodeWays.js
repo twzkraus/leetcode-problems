@@ -65,23 +65,35 @@ s contains only digits and may contain leading zero(s).
         add numDecodings to count
   return count
 */
-var numDecodings = function(s, startPoint = 0) {
-  if (s.length - startPoint < 2 && s[startPoint] !== '0') {
-      return 1;
-  }
-  let count = 0;
-  let oneDig = parseInt(s[startPoint]);
-  let twoDig = parseInt(s[startPoint] + s[startPoint + 1]);
+var numDecodings = function(s) {
 
-  if (oneDig === 0) {
-      return 0;
-  } else if (oneDig < 10) {
-      count += numDecodings(s, startPoint + 1);
-  }
+  const storage = {};
 
-  if (twoDig > 0 && twoDig <= 26) {
-      count += numDecodings(s, startPoint + 1);
-  }
+  var recurse = function(startPoint) {
+      if (storage[startPoint] !== undefined) {
+          return storage[startPoint];
+      }
 
-  return count;
+      if (s.length - startPoint < 2 && s[startPoint] !== '0') {
+          return 1;
+      }
+      let count = 0;
+      let oneDig = parseInt(s[startPoint]);
+      let twoDig = parseInt(s[startPoint] + s[startPoint + 1]);
+
+      if (oneDig === 0) {
+          return 0;
+      } else if (oneDig < 10) {
+          count += recurse(startPoint + 1);
+      }
+
+      if (twoDig > 0 && twoDig <= 26) {
+          count += recurse(startPoint + 2);
+      }
+      storage[startPoint] = count;
+
+      return count;
+  };
+
+  return recurse(0);
 };
