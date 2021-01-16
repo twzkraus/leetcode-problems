@@ -65,22 +65,22 @@ s contains only digits and may contain leading zero(s).
         add numDecodings to count
   return count
 */
-var numDecodings = function(s) {
-  if (s.length < 2 && s[0] !== '0') {
+var numDecodings = function(s, startPoint = 0) {
+  if (s.length - startPoint < 2 && s[startPoint] !== '0') {
       return 1;
   }
   let count = 0;
-  let oneDig = parseInt(s[0]);
-  let twoDig = parseInt(s[0] + s[1]);
+  let oneDig = parseInt(s[startPoint]);
+  let twoDig = parseInt(s[startPoint] + s[startPoint + 1]);
 
   if (oneDig === 0) {
       return 0;
   } else if (oneDig < 10) {
-      count += numDecodings(s.slice(1));
+      count += numDecodings(s, startPoint + 1);
   }
 
   if (twoDig > 0 && twoDig <= 26) {
-      count += numDecodings(s.slice(2));
+      count += numDecodings(s, startPoint + 1);
   }
 
   return count;
