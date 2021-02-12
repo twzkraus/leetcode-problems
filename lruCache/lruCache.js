@@ -79,6 +79,9 @@ ListWithHash.prototype.removeKeyIfPresent = function(key) {
       if (node === this.head) {
           this.head = rightNode;
       }
+      if (node === this.tail) {
+          this.tail = leftNode;
+      }
       delete this.hash[key];
       this.length--;
       return node;
@@ -119,7 +122,7 @@ ListWithHash.prototype.removeHead = function() {
 };
 
 ListWithHash.prototype.retrieve = function(key) {
-  let node = this.removeKeyIfPresent(key);
+  let node = this.hash[key];
   if (node) {
       this.addTail(node.key, node.value);
       return node.value;
